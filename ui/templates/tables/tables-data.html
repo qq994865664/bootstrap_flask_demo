@@ -23,7 +23,7 @@
             <p>Add lightweight datatables to your project with using the <a href="https://github.com/fiduswriter/Simple-DataTables" target="_blank">Simple DataTables</a> library. Just add <code>.datatable</code> class name to any table you wish to conver to a datatable</p>
 
             <!-- Table with stripped rows -->
-            <table class="table datatable">
+            <table class="table datatable" id="table_data">
               <thead>
               <tr>
                 <th scope="col"> #</th>
@@ -44,7 +44,7 @@
                 <tr>
                   <th scope="row"><a href="#"><i>{{ loop.index }}</i></a></th>
                   {% for item in item_list %}
-                    <td> {{ item }} </td>
+                    <td>{{ item }}</td>
                   {% endfor %}
                 </tr>
               {% endfor %}
@@ -118,9 +118,25 @@
 
 {% block js %}
   <script>
-    $(document).ready(function(){
-      $("#tables-nav").addClass("nav-content collapse show")
-      $("#data").addClass('active');
-    });
+      $(function () {
+          $("#tables-nav").addClass("nav-content collapse show")
+          $("#data").addClass('active');
+          $(document).on('click', "#table_data td", function () {
+              const val = $(this).text();
+              $.ajax({
+                  url: "/ajax",
+                  type: "POST",
+                  data: JSON.stringify({"num": val}),
+                  dataType: 'json',
+                  contentType: 'application/json',
+                  success: function (data) {
+                      console.log(data)
+                  },
+                  error: function (e) {
+
+                  }
+              })
+          })
+      });
   </script>
 {% endblock %}
